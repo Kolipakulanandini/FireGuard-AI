@@ -1,0 +1,18 @@
+
+# Python
+__pycache__/
+*.pyc
+
+# YOLO generated results
+runs/
+
+# Uploaded images
+static/uploads/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/

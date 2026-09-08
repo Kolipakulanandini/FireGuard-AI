@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FireGuard AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: white;
+        }
+
+        .header {
+            background: #111827;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ef4444;
+        }
+
+        .status {
+            background: #14532d;
+            color: #86efac;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .container {
+            padding: 30px 40px;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #334155;
+        }
+
+        .card h3 {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .card .value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .fire {
+            color: #ef4444;
+        }
+
+        .smoke {
+            color: #f59e0b;
+        }
+
+        .safe {
+            color: #22c55e;
+        }
+
+        .danger {
+            color: #ef4444;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .panel h2 {
+            margin-bottom: 20px;
+        }
+
+        .camera {
+            min-height: 400px;
+            background: #020617;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            border: 2px dashed #475569;
+            padding: 20px;
+        }
+
+        .camera-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .camera p {
+            color: #94a3b8;
+        }
+
+        .uploaded-image {
+            max-width: 90%;
+            max-height: 350px;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+
+        .filename {
+            margin-top: 15px;
+            color: #94a3b8;
+        }
+
+        .upload-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .upload-form input {
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .upload-button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .upload-button:hover {
+            background: #dc2626;
+        }
+
+        .detection {
+            margin-bottom: 20px;
+        }
+
+        .detection-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            background: #0f172a;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            gap: 15px;
+        }
+
+        .detected-list {
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detected-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: #0f172a;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .location {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0f172a;
+            border-radius: 8px;
+        }
+
+        .location p {
+            margin: 8px 0;
+            color: #cbd5e1;
+        }
+
+        .alert-box {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 10px;
+        }
+
+        .alert-danger {
+            background: #450a0a;
+            border: 1px solid #ef4444;
+        }
+
+        .alert-danger h3 {
+            color: #fca5a5;
+            margin-bottom: 8px;
+        }
+
+        .alert-danger p {
+            color: #fecaca;
+        }
+
+        .alert-safe {
+            background: #052e16;
+            border: 1px solid #22c55e;
+        }
+
+        .alert-safe h3 {
+            color: #86efac;
+            margin-bottom: 8px;
+        }
+
+        .alert-safe p {
+            color: #bbf7d0;
+        }
+
+        .error-box {
+            background: #450a0a;
+            border: 1px solid #ef4444;
+            color: #fecaca;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 900px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="logo">
+            🔥 FireGuard <span>AI</span>
+        </div>
+
+        <div class="status">
+            ● SYSTEM ONLINE
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main class="container">
+
+
+        <!-- WELCOME -->
+
+        <section class="welcome">
+
+            <h1>
+                Fire & Smoke Detection Dashboard
+            </h1>
+
+            <p>
+                AI-powered computer vision system for early fire detection and emergency response.
+            </p>
+
+        </section>
+
+
+        <!-- ERROR MESSAGE -->
+
+        {% if error %}
+
+        <div class="error-box">
+            🚨 {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- DASHBOARD CARDS -->
+
+        <section class="cards">
+
+
+            <!-- FIRE COUNT -->
+
+            <div class="card">
+
+                <h3>
+                    🔥 FIRE DETECTIONS
+                </h3>
+
+                <div class="value fire">
+
+                    {% if fire_count is defined %}
+                        {{ fire_count }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- SMOKE COUNT -->
+
+            <div class="card">
+
+                <h3>
+                    💨 SMOKE DETECTIONS
+                </h3>
+
+                <div class="value smoke">
+
+                    {% if smoke_count is defined %}
+                        {{ smoke_count }}
+                    {% else %}
+                        0
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- CONFIDENCE -->
+
+            <div class="card">
+
+                <h3>
+                    🎯 CONFIDENCE
+                </h3>
+
+                <div class="value">
+
+                    {% if highest_confidence is defined and highest_confidence > 0 %}
+
+                        {{ "%.2f"|format(highest_confidence) }}%
+
+                    {% else %}
+
+                        --
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- SYSTEM STATUS -->
+
+            <div class="card">
+
+                <h3>
+                    🛡️ SYSTEM STATUS
+                </h3>
+
+                <div
+                    class="value
+                    {% if system_status is defined and system_status != 'SAFE' %}
+                        danger
+                    {% else %}
+                        safe
+                    {% endif %}"
+                >
+
+                    {% if system_status is defined %}
+
+                        {{ system_status }}
+
+                    {% else %}
+
+                        SAFE
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- MAIN GRID -->
+
+        <section class="main-grid">
+
+
+            <!-- CAMERA PANEL -->
+
+            <div class="panel">
+
+                <h2>
+                    📷 Camera / Video Feed
+                </h2>
+
+
+                <div class="camera">
+
+
+                    {% if uploaded_image %}
+
+                        <!-- YOLO ANNOTATED IMAGE -->
+
+                        <img
+                            src="{{ uploaded_image }}"
+                            alt="FireGuard AI Detection"
+                            class="uploaded-image"
+                        >
+
+
+                        <p class="filename">
+                            📷 {{ uploaded_filename }}
+                        </p>
+
+
+                    {% else %}
+
+                        <div class="camera-icon">
+                            📷
+                        </div>
+
+                        <p>
+                            Upload an image for FireGuard AI
+                        </p>
+
+                    {% endif %}
+
+
+                    <!-- UPLOAD FORM -->
+
+                    <form
+                        action="/upload"
+                        method="POST"
+                        enctype="multipart/form-data"
+                        class="upload-form"
+                    >
+
+                        <input
+                            type="file"
+                            name="image"
+                            accept=".jpg,.jpeg,.png,.webp"
+                            required
+                        >
+
+                        <br>
+
+                        <button
+                            type="submit"
+                            class="upload-button"
+                        >
+                            🔥 Upload Image
+                        </button>
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- DETECTION DETAILS -->
+
+            <div class="panel">
+
+                <h2>
+                    🎯 Detection Details
+                </h2>
+
+
+                <div class="detection">
+
+
+                    <!-- DETECTED OBJECT -->
+
+                    <div class="detection-row">
+
+                        <span>
+                            Detected Object
+                        </span>
+
+                        <strong>
+
+                            {% if detected_objects is defined and detected_objects %}
+
+                                {% for object in detected_objects %}
+
+                                    {{ object.name }}{% if not loop.last %}, {% endif %}
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                None
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- HIGHEST CONFIDENCE -->
+
+                    <div class="detection-row">
+
+                        <span>
+                            Confidence
+                        </span>
+
+                        <strong>
+
+                            {% if highest_confidence is defined and highest_confidence > 0 %}
+
+                                {{ "%.2f"|format(highest_confidence) }}%
+
+                            {% else %}
+
+                                --
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- DETECTION TIME -->
+
+                    <div class="detection-row">
+
+                        <span>
+                            Detection Time
+                        </span>
+
+                        <strong>
+
+                            {% if detected_objects is defined and detected_objects %}
+
+                                AI Analysis Complete
+
+                            {% else %}
+
+                                --
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- DETECTED OBJECTS -->
+
+                <h2>
+                    🔎 Detected Objects
+                </h2>
+
+
+                <div class="detected-list">
+
+
+                    {% if detected_objects is defined and detected_objects %}
+
+
+                        {% for object in detected_objects %}
+
+                        <div class="detected-item">
+
+                            <span>
+                                {{ object.name }}
+                            </span>
+
+                            <strong>
+                                {{ "%.2f"|format(object.confidence) }}%
+                            </strong>
+
+                        </div>
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+                        <div class="detected-item">
+
+                            <span>
+                                No objects detected
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <h2>
+                    📍 Fire Location
+                </h2>
+
+
+                <div class="location">
+
+                    <p>
+                        <strong>Building:</strong>
+                        Main Building
+                    </p>
+
+                    <p>
+                        <strong>Floor:</strong>
+                        2nd Floor
+                    </p>
+
+                    <p>
+                        <strong>Room / Zone:</strong>
+                        Laboratory
+                    </p>
+
+                </div>
+
+
+                <!-- EMERGENCY ALERT -->
+
+                {% if fire_count is defined and fire_count > 0 %}
+
+
+                    <div class="alert-box alert-danger">
+
+                        <h3>
+                            🚨 Emergency Alert
+                        </h3>
+
+                        <p>
+                            🔥 FIRE DETECTED! Immediate attention required.
+                        </p>
+
+                    </div>
+
+
+                {% elif smoke_count is defined and smoke_count > 0 %}
+
+
+                    <div class="alert-box alert-danger">
+
+                        <h3>
+                            ⚠️ Smoke Alert
+                        </h3>
+
+                        <p>
+                            💨 Smoke detected. Please inspect the area.
+                        </p>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <div class="alert-box alert-safe">
+
+                        <h3>
+                            🛡️ System Status
+                        </h3>
+
+                        <p>
+                            ✅ No active fire or smoke detected.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        FireGuard AI © 2026 |
+        Computer Vision Based Fire & Smoke Detection
+
+    </footer>
+
+
+</body>
+
+</html>
